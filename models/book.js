@@ -1,6 +1,5 @@
 const db = require("../db");
 
-
 /** Collection of related methods for books. */
 
 class Book {
@@ -12,7 +11,7 @@ class Book {
 
   static async findOne(isbn) {
     const bookRes = await db.query(
-        `SELECT isbn,
+      `SELECT isbn,
                 amazon_url,
                 author,
                 language,
@@ -21,10 +20,12 @@ class Book {
                 title,
                 year
             FROM books 
-            WHERE isbn = $1`, [isbn]);
+            WHERE isbn = $1`,
+      [isbn]
+    );
 
     if (bookRes.rows.length === 0) {
-      throw { message: `There is no book with an isbn '${isbn}`, status: 404 }
+      throw { message: `There is no book with an isbn '${isbn}`, status: 404 };
     }
 
     return bookRes.rows[0];
@@ -39,7 +40,7 @@ class Book {
 
   static async findAll() {
     const booksRes = await db.query(
-        `SELECT isbn,
+      `SELECT isbn,
                 amazon_url,
                 author,
                 language,
@@ -48,7 +49,8 @@ class Book {
                 title,
                 year
             FROM books 
-            ORDER BY title`);
+            ORDER BY title`
+    );
 
     return booksRes.rows;
   }
@@ -89,7 +91,7 @@ class Book {
         data.pages,
         data.publisher,
         data.title,
-        data.year
+        data.year,
       ]
     );
 
@@ -131,12 +133,12 @@ class Book {
         data.publisher,
         data.title,
         data.year,
-        isbn
+        isbn,
       ]
     );
 
     if (result.rows.length === 0) {
-      throw { message: `There is no book with an isbn '${isbn}`, status: 404 }
+      throw { message: `There is no book with an isbn '${isbn}`, status: 404 };
     }
 
     return result.rows[0];
@@ -149,13 +151,13 @@ class Book {
       `DELETE FROM books 
          WHERE isbn = $1 
          RETURNING isbn`,
-        [isbn]);
+      [isbn]
+    );
 
     if (result.rows.length === 0) {
-      throw { message: `There is no book with an isbn '${isbn}`, status: 404 }
+      throw { message: `There is no book with an isbn '${isbn}`, status: 404 };
     }
   }
 }
-
 
 module.exports = Book;
